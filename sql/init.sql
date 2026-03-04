@@ -26,7 +26,7 @@ SELECT *
 FROM (SELECT w.id                                                            AS warehouse_id,
              p.id                                                            AS product_id,
              DATE_ADD('2024-01-01', INTERVAL (FLOOR(RAND() * 12 * 3)) MONTH) AS sale_date,
-             ROUND(RAND() * 500 + 50, 2)                                     AS quantity,
+             FLOOR(RAND() * 500 + 50)                                        AS quantity,
              ROUND(RAND() * 50000 + 5000, 2)                                 AS revenue
       FROM warehouse w,
            product p,
@@ -78,8 +78,8 @@ WHERE t.source_warehouse_id != t.target_warehouse_id;
 INSERT INTO transfer_order_item (transfer_order_id, product_id, transfer_quantity, actual_quantity, remark)
 SELECT o.id,
        p.id,
-       ROUND(RAND() * 50 + 10, 2),
-       ROUND(RAND() * 50 + 10, 2),
+       FLOOR(RAND() * 50 + 10),
+       FLOOR(RAND() * 50 + 10),
        '季度调拨'
 FROM transfer_order o,
      product p
