@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -36,12 +35,12 @@ public class Inventory {
     /**
      * 库存总量
      */
-    private BigDecimal quantity;
+    private Long quantity;
 
     /**
      * 被锁定的库存数量
      */
-    private BigDecimal lockedQuantity;
+    private Long lockedQuantity;
 
     /**
      * 创建时间

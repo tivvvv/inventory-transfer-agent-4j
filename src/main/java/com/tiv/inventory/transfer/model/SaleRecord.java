@@ -41,7 +41,7 @@ public class SaleRecord {
     /**
      * 销售出库数量
      */
-    private BigDecimal quantity;
+    private Long quantity;
 
     /**
      * 销售收入金额

@@ -5,8 +5,6 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-import java.math.BigDecimal;
-
 /**
  * 调拨单商品明细表
  *
@@ -35,12 +33,12 @@ public class TransferOrderItem {
     /**
      * 计划调拨数量
      */
-    private BigDecimal transferQuantity;
+    private Long transferQuantity;
 
     /**
      * 实际接收确认数量
      */
-    private BigDecimal actualQuantity;
+    private Long actualQuantity;
 
     /**
      * 备注信息

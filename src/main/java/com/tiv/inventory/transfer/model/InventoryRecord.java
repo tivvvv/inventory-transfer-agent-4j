@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -41,7 +40,7 @@ public class InventoryRecord {
     /**
      * 库存变化量:正值为增加 负值为减少
      */
-    private BigDecimal quantityChange;
+    private Long quantityChange;
 
     /**
      * 调拨单编号

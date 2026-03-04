@@ -26,10 +26,10 @@ CREATE TABLE product
 CREATE TABLE sale_record
 (
     id           BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
-    warehouse_id BIGINT         NOT NULL COMMENT '仓库ID',
-    product_id   BIGINT         NOT NULL COMMENT '商品ID',
-    sale_date    DATE           NOT NULL COMMENT '销售日期',
-    quantity     DECIMAL(18, 2) NOT NULL COMMENT '销售出库数量',
+    warehouse_id BIGINT NOT NULL COMMENT '仓库ID',
+    product_id   BIGINT NOT NULL COMMENT '商品ID',
+    sale_date    DATE   NOT NULL COMMENT '销售日期',
+    quantity     BIGINT NOT NULL COMMENT '销售出库数量',
     revenue      DECIMAL(18, 2) DEFAULT 0 COMMENT '销售收入金额',
     created_time DATETIME       DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'
 ) COMMENT ='商品销售记录表';
@@ -39,10 +39,10 @@ CREATE TABLE inventory
     id              BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
     warehouse_id    BIGINT NOT NULL COMMENT '仓库ID',
     product_id      BIGINT NOT NULL COMMENT '商品ID',
-    quantity        DECIMAL(18, 2) DEFAULT 0 COMMENT '库存总量',
-    locked_quantity DECIMAL(18, 2) DEFAULT 0 COMMENT '被锁定的库存数量',
-    created_time    DATETIME       DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    updated_time    DATETIME       DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    quantity        BIGINT   DEFAULT 0 COMMENT '库存总量',
+    locked_quantity BIGINT   DEFAULT 0 COMMENT '被锁定的库存数量',
+    created_time    DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updated_time    DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     UNIQUE KEY uk_ware_prod (warehouse_id, product_id)
 ) COMMENT ='库存信息表';
 
@@ -65,20 +65,20 @@ CREATE TABLE transfer_order
 CREATE TABLE transfer_order_item
 (
     id                BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
-    transfer_order_id BIGINT         NOT NULL COMMENT '调拨单ID',
-    product_id        BIGINT         NOT NULL COMMENT '调拨商品ID',
-    transfer_quantity DECIMAL(18, 2) NOT NULL COMMENT '计划调拨数量',
-    actual_quantity   DECIMAL(18, 2) DEFAULT 0 COMMENT '实际接收确认数量',
-    remark            VARCHAR(255)   DEFAULT NULL COMMENT '备注信息'
+    transfer_order_id BIGINT NOT NULL COMMENT '调拨单ID',
+    product_id        BIGINT NOT NULL COMMENT '调拨商品ID',
+    transfer_quantity BIGINT NOT NULL COMMENT '计划调拨数量',
+    actual_quantity   BIGINT       DEFAULT 0 COMMENT '实际接收确认数量',
+    remark            VARCHAR(255) DEFAULT NULL COMMENT '备注信息'
 ) COMMENT ='调拨单商品明细表';
 
 CREATE TABLE inventory_record
 (
     id              BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
-    warehouse_id    BIGINT         NOT NULL COMMENT '仓库ID',
-    product_id      BIGINT         NOT NULL COMMENT '商品ID',
-    change_type     VARCHAR(50)    NOT NULL COMMENT '库存变更类型:IN-入库 OUT-出库 TRANSFER_OUT-调拨出库 TRANSFER_IN-调拨入库',
-    quantity_change DECIMAL(18, 2) NOT NULL COMMENT '库存变化量:正值为增加 负值为减少',
+    warehouse_id    BIGINT      NOT NULL COMMENT '仓库ID',
+    product_id      BIGINT      NOT NULL COMMENT '商品ID',
+    change_type     VARCHAR(50) NOT NULL COMMENT '库存变更类型:IN-入库 OUT-出库 TRANSFER_OUT-调拨出库 TRANSFER_IN-调拨入库',
+    quantity_change BIGINT      NOT NULL COMMENT '库存变化量:正值为增加 负值为减少',
     order_code      VARCHAR(50)  DEFAULT NULL COMMENT '调拨单编号',
     created_time    DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     remark          VARCHAR(255) DEFAULT NULL COMMENT '备注信息'
