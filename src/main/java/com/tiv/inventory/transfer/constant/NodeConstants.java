@@ -6,4 +6,6 @@ public interface NodeConstants {
 
     String COLLECT_INVENTORY_TRANSFER_NODE = "CollectInventoryTransferNode";
 
+    String TRANSFER_SUGGEST_NODE = "TransferSuggestNode";
+
 }
