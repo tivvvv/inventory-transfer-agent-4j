@@ -10,4 +10,6 @@ public interface Constants {
 
     String PRODUCT_INVENTORY_DATA = "productInventoryData";
 
+    String INVENTORY_TRANSFER_DATA = "inventoryTransferData";
+
 }

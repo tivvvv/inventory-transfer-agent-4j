@@ -4,4 +4,6 @@ public interface NodeConstants {
 
     String COLLECT_SALE_RECORD_NODE = "CollectSaleRecordNode";
 
+    String COLLECT_INVENTORY_TRANSFER_NODE = "CollectInventoryTransferNode";
+
 }
