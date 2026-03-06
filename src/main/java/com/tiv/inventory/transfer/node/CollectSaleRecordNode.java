@@ -4,12 +4,8 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.cloud.ai.graph.OverAllState;
 import com.alibaba.cloud.ai.graph.action.NodeAction;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.tiv.inventory.transfer.constant.Constants;
 import com.tiv.inventory.transfer.domain.dto.SaleRecordData;
-import com.tiv.inventory.transfer.model.Inventory;
-import com.tiv.inventory.transfer.service.InventoryService;
 import com.tiv.inventory.transfer.service.SaleRecordService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,8 +22,6 @@ public class CollectSaleRecordNode implements NodeAction {
 
     private final SaleRecordService saleRecordService;
 
-    private final InventoryService inventoryService;
-
     @Override
     public Map<String, Object> apply(OverAllState state) throws Exception {
         // 1. 从状态机获取商品id
@@ -41,15 +35,8 @@ public class CollectSaleRecordNode implements NodeAction {
         String saleRecordDataJson = JSONUtil.toJsonStr(saleRecordData);
         log.info("apply--saleRecordDataJson: {}", saleRecordDataJson);
 
-        // 3. 查询商品剩余库存
-        LambdaQueryWrapper<Inventory> lambdaQueryWrapper = Wrappers.lambdaQuery(Inventory.class)
-                .eq(Inventory::getProductId, productId);
-        List<Inventory> productInventoryData = inventoryService.list(lambdaQueryWrapper);
-        String productInventoryDataJson = JSONUtil.toJsonStr(productInventoryData);
-        log.info("apply--productInventoryDataJson: {}", productInventoryDataJson);
 
-        return Map.of(Constants.SALE_RECORD_DATA, saleRecordDataJson,
-                Constants.PRODUCT_INVENTORY_DATA, productInventoryDataJson);
+        return Map.of(Constants.SALE_RECORD_DATA, saleRecordDataJson);
     }
 
 }

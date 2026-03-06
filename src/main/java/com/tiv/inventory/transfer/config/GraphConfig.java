@@ -9,6 +9,7 @@ import com.alibaba.cloud.ai.graph.state.strategy.ReplaceStrategy;
 import com.tiv.inventory.transfer.constant.Constants;
 import com.tiv.inventory.transfer.constant.NodeConstants;
 import com.tiv.inventory.transfer.node.CollectInventoryTransferNode;
+import com.tiv.inventory.transfer.node.CollectProductInventoryNode;
 import com.tiv.inventory.transfer.node.CollectSaleRecordNode;
 import com.tiv.inventory.transfer.node.TransferSuggestNode;
 import com.tiv.inventory.transfer.service.InventoryService;
@@ -47,15 +48,18 @@ public class GraphConfig {
         StateGraph stateGraph = new StateGraph(Constants.INVENTORY_TRANSFER_GRAPH, keyStrategyFactory);
 
         // 定义节点
-        stateGraph.addNode(NodeConstants.COLLECT_SALE_RECORD_NODE, AsyncNodeAction.node_async(new CollectSaleRecordNode(saleRecordService, inventoryService)));
+        stateGraph.addNode(NodeConstants.COLLECT_SALE_RECORD_NODE, AsyncNodeAction.node_async(new CollectSaleRecordNode(saleRecordService)));
+        stateGraph.addNode(NodeConstants.COLLECT_PRODUCT_INVENTORY_NODE, AsyncNodeAction.node_async(new CollectProductInventoryNode(inventoryService)));
         stateGraph.addNode(NodeConstants.COLLECT_INVENTORY_TRANSFER_NODE, AsyncNodeAction.node_async(new CollectInventoryTransferNode(transferOrderService)));
         stateGraph.addNode(NodeConstants.TRANSFER_SUGGEST_NODE, AsyncNodeAction.node_async(new TransferSuggestNode(chatClientBuilder.build())));
 
         // 定义边
         stateGraph.addEdge(StateGraph.START, NodeConstants.COLLECT_SALE_RECORD_NODE);
+        stateGraph.addEdge(StateGraph.START, NodeConstants.COLLECT_PRODUCT_INVENTORY_NODE);
         stateGraph.addEdge(StateGraph.START, NodeConstants.COLLECT_INVENTORY_TRANSFER_NODE);
 
         stateGraph.addEdge(NodeConstants.COLLECT_SALE_RECORD_NODE, NodeConstants.TRANSFER_SUGGEST_NODE);
+        stateGraph.addEdge(NodeConstants.COLLECT_PRODUCT_INVENTORY_NODE, NodeConstants.TRANSFER_SUGGEST_NODE);
         stateGraph.addEdge(NodeConstants.COLLECT_INVENTORY_TRANSFER_NODE, NodeConstants.TRANSFER_SUGGEST_NODE);
 
         stateGraph.addEdge(NodeConstants.TRANSFER_SUGGEST_NODE, StateGraph.END);
