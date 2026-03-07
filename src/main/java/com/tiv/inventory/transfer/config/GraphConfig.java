@@ -8,10 +8,7 @@ import com.alibaba.cloud.ai.graph.exception.GraphStateException;
 import com.alibaba.cloud.ai.graph.state.strategy.ReplaceStrategy;
 import com.tiv.inventory.transfer.constant.Constants;
 import com.tiv.inventory.transfer.constant.NodeConstants;
-import com.tiv.inventory.transfer.node.CollectInventoryTransferNode;
-import com.tiv.inventory.transfer.node.CollectProductInventoryNode;
-import com.tiv.inventory.transfer.node.CollectSaleRecordNode;
-import com.tiv.inventory.transfer.node.TransferSuggestNode;
+import com.tiv.inventory.transfer.node.*;
 import com.tiv.inventory.transfer.service.InventoryService;
 import com.tiv.inventory.transfer.service.SaleRecordService;
 import com.tiv.inventory.transfer.service.TransferOrderService;
@@ -39,19 +36,15 @@ public class GraphConfig {
 
     @Bean
     public CompiledGraph graph(ChatClient.Builder chatClientBuilder) throws GraphStateException {
-
         // 全局状态机
-        KeyStrategyFactory keyStrategyFactory = () -> Map.of(Constants.PRODUCT_ID, new ReplaceStrategy(),
-                Constants.SALE_RECORD_DATA, new ReplaceStrategy(),
-                Constants.PRODUCT_INVENTORY_DATA, new ReplaceStrategy(),
-                Constants.INVENTORY_TRANSFER_DATA, new ReplaceStrategy());
-        StateGraph stateGraph = new StateGraph(Constants.INVENTORY_TRANSFER_GRAPH, keyStrategyFactory);
+        StateGraph stateGraph = registerStateGraph();
 
         // 定义节点
         stateGraph.addNode(NodeConstants.COLLECT_SALE_RECORD_NODE, AsyncNodeAction.node_async(new CollectSaleRecordNode(saleRecordService)));
         stateGraph.addNode(NodeConstants.COLLECT_PRODUCT_INVENTORY_NODE, AsyncNodeAction.node_async(new CollectProductInventoryNode(inventoryService)));
         stateGraph.addNode(NodeConstants.COLLECT_INVENTORY_TRANSFER_NODE, AsyncNodeAction.node_async(new CollectInventoryTransferNode(transferOrderService)));
         stateGraph.addNode(NodeConstants.TRANSFER_SUGGEST_NODE, AsyncNodeAction.node_async(new TransferSuggestNode(chatClientBuilder.build())));
+        stateGraph.addNode(NodeConstants.PROCESS_SUGGEST_FORMAT_NODE, AsyncNodeAction.node_async(new ProcessSuggestFormatNode(chatClientBuilder.build())));
 
         // 定义边
         stateGraph.addEdge(StateGraph.START, NodeConstants.COLLECT_SALE_RECORD_NODE);
@@ -62,9 +55,22 @@ public class GraphConfig {
         stateGraph.addEdge(NodeConstants.COLLECT_PRODUCT_INVENTORY_NODE, NodeConstants.TRANSFER_SUGGEST_NODE);
         stateGraph.addEdge(NodeConstants.COLLECT_INVENTORY_TRANSFER_NODE, NodeConstants.TRANSFER_SUGGEST_NODE);
 
-        stateGraph.addEdge(NodeConstants.TRANSFER_SUGGEST_NODE, StateGraph.END);
+        stateGraph.addEdge(NodeConstants.TRANSFER_SUGGEST_NODE, NodeConstants.PROCESS_SUGGEST_FORMAT_NODE);
+
+        stateGraph.addEdge(NodeConstants.PROCESS_SUGGEST_FORMAT_NODE, StateGraph.END);
 
         return stateGraph.compile();
+    }
+
+    private StateGraph registerStateGraph() {
+        KeyStrategyFactory keyStrategyFactory = () -> Map.of(
+                Constants.PRODUCT_ID, new ReplaceStrategy(),
+                Constants.SALE_RECORD_DATA, new ReplaceStrategy(),
+                Constants.PRODUCT_INVENTORY_DATA, new ReplaceStrategy(),
+                Constants.INVENTORY_TRANSFER_DATA, new ReplaceStrategy(),
+                Constants.TRANSFER_SUGGEST_RAW_DATA, new ReplaceStrategy(),
+                Constants.TRANSFER_SUGGEST_FORMATTED_DATA, new ReplaceStrategy());
+        return new StateGraph(Constants.INVENTORY_TRANSFER_GRAPH, keyStrategyFactory);
     }
 
 }

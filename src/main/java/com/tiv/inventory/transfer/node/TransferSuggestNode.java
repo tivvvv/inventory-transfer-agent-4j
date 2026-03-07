@@ -98,7 +98,7 @@ public class TransferSuggestNode implements NodeAction {
         StringBuilder sb = new StringBuilder();
         flux.doOnNext(sb::append).blockLast();
         log.info("ai调拨建议: {}", sb);
-        return Map.of();
+        return Map.of(Constants.TRANSFER_SUGGEST_RAW_DATA, sb.toString());
     }
 
 }

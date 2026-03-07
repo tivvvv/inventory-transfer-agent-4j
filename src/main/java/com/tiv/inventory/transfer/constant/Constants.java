@@ -12,6 +12,10 @@ public interface Constants {
 
     String INVENTORY_TRANSFER_DATA = "inventoryTransferData";
 
+    String TRANSFER_SUGGEST_RAW_DATA = "transferSuggestRawData";
+
+    String TRANSFER_SUGGEST_FORMATTED_DATA = "transferSuggestFormattedData";
+
     String CUR_DATE = "curDate";
 
 }

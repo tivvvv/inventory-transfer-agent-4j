@@ -10,4 +10,6 @@ public interface NodeConstants {
 
     String TRANSFER_SUGGEST_NODE = "TransferSuggestNode";
 
+    String PROCESS_SUGGEST_FORMAT_NODE = "ProcessSuggestFormatNode";
+
 }
