@@ -87,7 +87,7 @@ public class TransferSuggestNode implements NodeAction {
                         商品剩余库存数据: {productInventoryData}
                         库存历史调拨数据: {inventoryTransferData}
                         当前日期: {curDate}
-                        帮我生成一份库存调拨单
+                        帮我生成一份库存调拨单, 输出结果必须为JSON格式
                         """).params(Map.of(Constants.PRODUCT_ID, productId,
                         Constants.SALE_RECORD_DATA, saleRecordData,
                         Constants.PRODUCT_INVENTORY_DATA, productInventoryData,
