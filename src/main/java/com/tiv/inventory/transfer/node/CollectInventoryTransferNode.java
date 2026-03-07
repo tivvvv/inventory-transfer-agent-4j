@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 采集商品库存调拨数据节点
+ * 采集商品库存历史调拨数据节点
  */
 @Slf4j
 @AllArgsConstructor

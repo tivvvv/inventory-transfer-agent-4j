@@ -12,4 +12,6 @@ public interface Constants {
 
     String INVENTORY_TRANSFER_DATA = "inventoryTransferData";
 
+    String CUR_DATE = "curDate";
+
 }
