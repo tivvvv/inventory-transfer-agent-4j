@@ -16,6 +16,13 @@ spring:
         options:
           model: deepseek-r1:8b
           temperature: 0.7
+  mail:
+    host: smtp.163.com
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    port: 25
+    default-encoding: UTF-8
+    protocol: smtp
   thymeleaf:
     cache: true
     check-template: true
@@ -36,3 +43,7 @@ mybatis-plus:
 logging:
   level:
     root: info
+
+notification:
+  email:
+    receiver: ${NOTIFICATION_EMAIL_RECEIVER}

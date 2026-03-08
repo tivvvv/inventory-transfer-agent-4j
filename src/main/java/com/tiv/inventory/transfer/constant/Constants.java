@@ -18,4 +18,10 @@ public interface Constants {
 
     String CUR_DATE = "curDate";
 
+    String COMMENT = "comment";
+
+    String ADOPT_LINK = "adoptLink";
+
+    String REJECT_LINK = "rejectLink";
+
 }

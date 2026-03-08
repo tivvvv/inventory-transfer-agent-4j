@@ -22,9 +22,9 @@ public class ProcessSuggestFormatNode implements NodeAction {
     private final static String SYSTEM_PROMPT = """
             # 角色:
                 你是一个数据处理专家, 擅长从文本数据中提取JSON数据并且修正格式.
-            # 输出要求
-                仅输出JSON数据, 禁止改变原来的数据类型, 并且不要输出任何解释, 任何备注或者Markdown标记.
-                输出时不要包含 ```json 或者 ``` 之类的包裹符号, 也不要包含多余的文字.
+            # 输出要求:
+                仅输出JSON格式数据, 禁止输出Markdown格式, 禁止改变原来的数据类型, 并且不要输出任何解释, 任何备注或者Markdown标记.
+                输出中严格禁止包含 json 或者 ```json 或者 ``` 之类的字符, 也不要包含多余的文字.
             """;
 
     @Override
@@ -42,8 +42,16 @@ public class ProcessSuggestFormatNode implements NodeAction {
                 .content();
         StringBuilder sb = new StringBuilder();
         flux.doOnNext(sb::append).blockLast();
-        log.info("格式化后的调拨建议: {}", sb);
-        return Map.of(Constants.TRANSFER_SUGGEST_FORMATTED_DATA, sb.toString());
+        String formattedSuggest = sb.toString();
+        log.info("格式化后的调拨建议: {}", formattedSuggest);
+
+        if (formattedSuggest.contains("json") || formattedSuggest.contains("```")) {
+            int start = formattedSuggest.indexOf('{');
+            int end = formattedSuggest.lastIndexOf('}');
+            formattedSuggest = formattedSuggest.substring(start, end + 1);
+            log.info("二次格式化后的调拨建议: {}", formattedSuggest);
+        }
+        return Map.of(Constants.TRANSFER_SUGGEST_FORMATTED_DATA, formattedSuggest);
     }
 
 }

@@ -9,11 +9,13 @@ import com.alibaba.cloud.ai.graph.state.strategy.ReplaceStrategy;
 import com.tiv.inventory.transfer.constant.Constants;
 import com.tiv.inventory.transfer.constant.NodeConstants;
 import com.tiv.inventory.transfer.node.*;
+import com.tiv.inventory.transfer.service.EmailService;
 import com.tiv.inventory.transfer.service.InventoryService;
 import com.tiv.inventory.transfer.service.SaleRecordService;
 import com.tiv.inventory.transfer.service.TransferOrderService;
 import jakarta.annotation.Resource;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -34,6 +36,12 @@ public class GraphConfig {
     @Resource
     private TransferOrderService transferOrderService;
 
+    @Resource
+    private EmailService emailService;
+
+    @Value("${notification.email.receiver}")
+    private String receiver;
+
     @Bean
     public CompiledGraph graph(ChatClient.Builder chatClientBuilder) throws GraphStateException {
         // 全局状态机
@@ -45,6 +53,7 @@ public class GraphConfig {
         stateGraph.addNode(NodeConstants.COLLECT_INVENTORY_TRANSFER_NODE, AsyncNodeAction.node_async(new CollectInventoryTransferNode(transferOrderService)));
         stateGraph.addNode(NodeConstants.TRANSFER_SUGGEST_NODE, AsyncNodeAction.node_async(new TransferSuggestNode(chatClientBuilder.build())));
         stateGraph.addNode(NodeConstants.PROCESS_SUGGEST_FORMAT_NODE, AsyncNodeAction.node_async(new ProcessSuggestFormatNode(chatClientBuilder.build())));
+        stateGraph.addNode(NodeConstants.NOTIFY_NODE, AsyncNodeAction.node_async(new NotifyNode(emailService, receiver)));
 
         // 定义边
         stateGraph.addEdge(StateGraph.START, NodeConstants.COLLECT_SALE_RECORD_NODE);
@@ -57,7 +66,8 @@ public class GraphConfig {
 
         stateGraph.addEdge(NodeConstants.TRANSFER_SUGGEST_NODE, NodeConstants.PROCESS_SUGGEST_FORMAT_NODE);
 
-        stateGraph.addEdge(NodeConstants.PROCESS_SUGGEST_FORMAT_NODE, StateGraph.END);
+        stateGraph.addEdge(NodeConstants.PROCESS_SUGGEST_FORMAT_NODE, NodeConstants.NOTIFY_NODE);
+        stateGraph.addEdge(NodeConstants.NOTIFY_NODE, StateGraph.END);
 
         return stateGraph.compile();
     }

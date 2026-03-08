@@ -12,4 +12,6 @@ public interface NodeConstants {
 
     String PROCESS_SUGGEST_FORMAT_NODE = "ProcessSuggestFormatNode";
 
+    String NOTIFY_NODE = "NotifyNode";
+
 }
