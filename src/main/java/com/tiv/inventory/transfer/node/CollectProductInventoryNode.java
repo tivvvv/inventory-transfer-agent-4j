@@ -36,7 +36,7 @@ public class CollectProductInventoryNode implements NodeAction {
                 .eq(Inventory::getProductId, productId);
         List<Inventory> productInventoryData = inventoryService.list(lambdaQueryWrapper);
         String productInventoryDataJson = JSONUtil.toJsonStr(productInventoryData);
-        log.info("apply--productInventoryDataJson: {}", productInventoryDataJson);
+        log.info("CollectProductInventoryNode--apply--productInventoryDataJson: {}", productInventoryDataJson);
 
         return Map.of(Constants.PRODUCT_INVENTORY_DATA, productInventoryDataJson);
     }

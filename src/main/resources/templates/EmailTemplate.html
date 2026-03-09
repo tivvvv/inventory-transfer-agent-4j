@@ -89,12 +89,12 @@
     <p>请点击下方按钮处理此调拨单: </p>
 
     <div class="button-container">
-        <a th:href="${adoptLink}" class="button adopt-button">采纳</a>
+        <a th:href="${approveLink}" class="button adopt-button">采纳</a>
         <a th:href="${rejectLink}" class="button reject-button">拒绝</a>
     </div>
 
     <p>如果您无法点击按钮, 请复制以下链接到浏览器中打开: </p>
-    <p>采纳链接: <span th:text="${adoptLink}"></span></p>
+    <p>采纳链接: <span th:text="${approveLink}"></span></p>
     <p>拒绝链接: <span th:text="${rejectLink}"></span></p>
 
     <div class="footer">

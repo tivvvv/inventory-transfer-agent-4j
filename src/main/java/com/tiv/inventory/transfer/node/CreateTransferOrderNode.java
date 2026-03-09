@@ -24,7 +24,8 @@ public class CreateTransferOrderNode implements NodeAction {
     public Map<String, Object> apply(OverAllState state) throws Exception {
         String transferSuggestFormattedData = state.value(Constants.TRANSFER_SUGGEST_FORMATTED_DATA, "");
         TransferSuggest transferSuggest = JSONUtil.toBean(transferSuggestFormattedData, TransferSuggest.class);
-        log.info("apply--transferSuggest: {}", transferSuggest);
+
+        log.info("CreateTransferOrderNode--apply--transferSuggest: {}", transferSuggest);
         transferOrderService.createTransferOrder(transferSuggest);
         return Map.of();
     }

@@ -92,10 +92,13 @@ public class TransferSuggestNode implements NodeAction {
                         Constants.CUR_DATE, DateUtil.today())))
                 .stream()
                 .content();
+
         StringBuilder sb = new StringBuilder();
         flux.doOnNext(sb::append).blockLast();
-        log.info("ai调拨建议: {}", sb);
-        return Map.of(Constants.TRANSFER_SUGGEST_RAW_DATA, sb.toString());
+        String transferSuggest = sb.toString();
+
+        log.info("TransferSuggestNode--apply--transferSuggest: {}", transferSuggest);
+        return Map.of(Constants.TRANSFER_SUGGEST_RAW_DATA, transferSuggest);
     }
 
 }

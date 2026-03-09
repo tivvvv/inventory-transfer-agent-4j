@@ -16,4 +16,6 @@ public interface NodeConstants {
 
     String CREATE_TRANSFER_ORDER_NODE = "CreateTransferOrderNode";
 
+    String HUMAN_REVIEW_NODE = "HumanReviewNode";
+
 }

@@ -16,12 +16,16 @@ public interface Constants {
 
     String TRANSFER_SUGGEST_FORMATTED_DATA = "transferSuggestFormattedData";
 
+    String HUMAN_REVIEW_NEXT_STEP = "humanReviewNextStep";
+
     String CUR_DATE = "curDate";
 
     String COMMENT = "comment";
 
-    String ADOPT_LINK = "adoptLink";
+    String APPROVE_LINK = "approveLink";
 
     String REJECT_LINK = "rejectLink";
+
+    String APPROVAL = "approval";
 
 }

@@ -1,5 +1,6 @@
 package com.tiv.inventory.transfer.config;
 
+import com.alibaba.cloud.ai.graph.CompileConfig;
 import com.alibaba.cloud.ai.graph.CompiledGraph;
 import com.alibaba.cloud.ai.graph.KeyStrategyFactory;
 import com.alibaba.cloud.ai.graph.StateGraph;
@@ -55,6 +56,7 @@ public class GraphConfig {
         stateGraph.addNode(NodeConstants.PROCESS_SUGGEST_FORMAT_NODE, AsyncNodeAction.node_async(new ProcessSuggestFormatNode(chatClientBuilder.build())));
         stateGraph.addNode(NodeConstants.NOTIFY_NODE, AsyncNodeAction.node_async(new NotifyNode(emailService, receiver)));
         stateGraph.addNode(NodeConstants.CREATE_TRANSFER_ORDER_NODE, AsyncNodeAction.node_async(new CreateTransferOrderNode(transferOrderService)));
+        stateGraph.addNode(NodeConstants.HUMAN_REVIEW_NODE, AsyncNodeAction.node_async(new HumanReviewNode()));
 
         // 定义边
         stateGraph.addEdge(StateGraph.START, NodeConstants.COLLECT_SALE_RECORD_NODE);
@@ -69,11 +71,17 @@ public class GraphConfig {
 
         stateGraph.addEdge(NodeConstants.PROCESS_SUGGEST_FORMAT_NODE, NodeConstants.NOTIFY_NODE);
 
-        stateGraph.addEdge(NodeConstants.NOTIFY_NODE, NodeConstants.CREATE_TRANSFER_ORDER_NODE);
+        stateGraph.addEdge(NodeConstants.NOTIFY_NODE, NodeConstants.HUMAN_REVIEW_NODE);
+
+        stateGraph.addEdge(NodeConstants.HUMAN_REVIEW_NODE, NodeConstants.CREATE_TRANSFER_ORDER_NODE);
 
         stateGraph.addEdge(NodeConstants.CREATE_TRANSFER_ORDER_NODE, StateGraph.END);
 
-        return stateGraph.compile();
+        // 编译配置
+        CompileConfig compileConfig = CompileConfig.builder()
+                .interruptBefore(NodeConstants.HUMAN_REVIEW_NODE)
+                .build();
+        return stateGraph.compile(compileConfig);
     }
 
     private StateGraph registerStateGraph() {
@@ -83,7 +91,8 @@ public class GraphConfig {
                 Constants.PRODUCT_INVENTORY_DATA, new ReplaceStrategy(),
                 Constants.INVENTORY_TRANSFER_DATA, new ReplaceStrategy(),
                 Constants.TRANSFER_SUGGEST_RAW_DATA, new ReplaceStrategy(),
-                Constants.TRANSFER_SUGGEST_FORMATTED_DATA, new ReplaceStrategy());
+                Constants.TRANSFER_SUGGEST_FORMATTED_DATA, new ReplaceStrategy(),
+                Constants.HUMAN_REVIEW_NEXT_STEP, new ReplaceStrategy());
         return new StateGraph(Constants.INVENTORY_TRANSFER_GRAPH, keyStrategyFactory);
     }
 

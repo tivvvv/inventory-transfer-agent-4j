@@ -33,7 +33,7 @@ public class CollectInventoryTransferNode implements NodeAction {
         // 2. 查询商品历史库存调拨数据
         List<InventoryTransferData> inventoryTransferData = transferOrderService.collectInventoryTransferDataByProductId(Long.parseLong(productId));
         String inventoryTransferDataJson = JSONUtil.toJsonStr(inventoryTransferData);
-        log.info("apply--inventoryTransferDataJson: {}", inventoryTransferDataJson);
+        log.info("CollectInventoryTransferNode--apply--inventoryTransferDataJson: {}", inventoryTransferDataJson);
 
         return Map.of(Constants.INVENTORY_TRANSFER_DATA, inventoryTransferDataJson);
     }

@@ -51,6 +51,8 @@ public class ProcessSuggestFormatNode implements NodeAction {
             formattedSuggest = formattedSuggest.substring(start, end + 1);
             log.info("二次格式化后的调拨建议: {}", formattedSuggest);
         }
+
+        log.info("ProcessSuggestFormatNode--apply--success");
         return Map.of(Constants.TRANSFER_SUGGEST_FORMATTED_DATA, formattedSuggest);
     }
 

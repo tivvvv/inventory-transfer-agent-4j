@@ -33,8 +33,7 @@ public class CollectSaleRecordNode implements NodeAction {
         // 2. 查询商品历史销售数据
         List<SaleRecordData> saleRecordData = saleRecordService.collectSaleRecordDataByProductId(Long.parseLong(productId));
         String saleRecordDataJson = JSONUtil.toJsonStr(saleRecordData);
-        log.info("apply--saleRecordDataJson: {}", saleRecordDataJson);
-
+        log.info("CollectSaleRecordNode--apply--saleRecordDataJson: {}", saleRecordDataJson);
 
         return Map.of(Constants.SALE_RECORD_DATA, saleRecordDataJson);
     }

@@ -29,9 +29,12 @@ public class NotifyNode implements NodeAction {
         String comment = jsonObject.getStr(Constants.COMMENT);
         Map<String, Object> variables = Map.of(
                 Constants.COMMENT, comment,
-                Constants.ADOPT_LINK, "",
+                Constants.APPROVE_LINK, "",
                 Constants.REJECT_LINK, "");
+
+        log.info("NotifyNode--apply-receiver: {}, variables: {}", receiver, variables);
         emailService.sendTemplateEmail(receiver, variables);
+
         return Map.of();
     }
 
