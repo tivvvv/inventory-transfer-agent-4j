@@ -14,4 +14,6 @@ public interface NodeConstants {
 
     String NOTIFY_NODE = "NotifyNode";
 
+    String CREATE_TRANSFER_ORDER_NODE = "CreateTransferOrderNode";
+
 }

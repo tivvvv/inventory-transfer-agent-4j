@@ -53,16 +53,13 @@ public class TransferSuggestNode implements NodeAction {
              {
                "sourceWarehouseId": 1,
                "targetWarehouseId": 2,
-               "status": 0,
-               "createdBy": "AI智能助手",
-               "transferType": 1,
                "transferDate": "2026-01-01",
-               "comment": "具体的解释说明"
+               "comment": "具体的解释说明",
+               "createdBy": "AI智能助手",
                "items": [
                  {
                    "productId": 11,
                    "transferQuantity": 500,
-                   "actualQuantity": 0,
                    "remark": "备注"
                  },
                  ...

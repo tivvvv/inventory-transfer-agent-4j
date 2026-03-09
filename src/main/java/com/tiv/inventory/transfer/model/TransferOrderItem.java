@@ -3,7 +3,10 @@ package com.tiv.inventory.transfer.model;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 /**
  * 调拨单商品明细表
@@ -11,6 +14,9 @@ import lombok.Data;
  * @TableName transfer_order_item
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Accessors(chain = true)
 @TableName(value = "transfer_order_item")
 public class TransferOrderItem {
 

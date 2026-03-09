@@ -54,6 +54,7 @@ public class GraphConfig {
         stateGraph.addNode(NodeConstants.TRANSFER_SUGGEST_NODE, AsyncNodeAction.node_async(new TransferSuggestNode(chatClientBuilder.build())));
         stateGraph.addNode(NodeConstants.PROCESS_SUGGEST_FORMAT_NODE, AsyncNodeAction.node_async(new ProcessSuggestFormatNode(chatClientBuilder.build())));
         stateGraph.addNode(NodeConstants.NOTIFY_NODE, AsyncNodeAction.node_async(new NotifyNode(emailService, receiver)));
+        stateGraph.addNode(NodeConstants.CREATE_TRANSFER_ORDER_NODE, AsyncNodeAction.node_async(new CreateTransferOrderNode(transferOrderService)));
 
         // 定义边
         stateGraph.addEdge(StateGraph.START, NodeConstants.COLLECT_SALE_RECORD_NODE);
@@ -67,7 +68,10 @@ public class GraphConfig {
         stateGraph.addEdge(NodeConstants.TRANSFER_SUGGEST_NODE, NodeConstants.PROCESS_SUGGEST_FORMAT_NODE);
 
         stateGraph.addEdge(NodeConstants.PROCESS_SUGGEST_FORMAT_NODE, NodeConstants.NOTIFY_NODE);
-        stateGraph.addEdge(NodeConstants.NOTIFY_NODE, StateGraph.END);
+
+        stateGraph.addEdge(NodeConstants.NOTIFY_NODE, NodeConstants.CREATE_TRANSFER_ORDER_NODE);
+
+        stateGraph.addEdge(NodeConstants.CREATE_TRANSFER_ORDER_NODE, StateGraph.END);
 
         return stateGraph.compile();
     }
