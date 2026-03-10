@@ -1,15 +1,17 @@
-package com.tiv.inventory.transfer.config;
+package com.tiv.inventory.transfer.graph.config;
 
 import com.alibaba.cloud.ai.graph.CompileConfig;
 import com.alibaba.cloud.ai.graph.CompiledGraph;
 import com.alibaba.cloud.ai.graph.KeyStrategyFactory;
 import com.alibaba.cloud.ai.graph.StateGraph;
+import com.alibaba.cloud.ai.graph.action.AsyncEdgeAction;
 import com.alibaba.cloud.ai.graph.action.AsyncNodeAction;
 import com.alibaba.cloud.ai.graph.exception.GraphStateException;
 import com.alibaba.cloud.ai.graph.state.strategy.ReplaceStrategy;
 import com.tiv.inventory.transfer.constant.Constants;
 import com.tiv.inventory.transfer.constant.NodeConstants;
-import com.tiv.inventory.transfer.node.*;
+import com.tiv.inventory.transfer.graph.edge.ReviewEdge;
+import com.tiv.inventory.transfer.graph.node.*;
 import com.tiv.inventory.transfer.service.EmailService;
 import com.tiv.inventory.transfer.service.InventoryService;
 import com.tiv.inventory.transfer.service.SaleRecordService;
@@ -73,7 +75,9 @@ public class GraphConfig {
 
         stateGraph.addEdge(NodeConstants.NOTIFY_NODE, NodeConstants.HUMAN_REVIEW_NODE);
 
-        stateGraph.addEdge(NodeConstants.HUMAN_REVIEW_NODE, NodeConstants.CREATE_TRANSFER_ORDER_NODE);
+        stateGraph.addConditionalEdges(NodeConstants.HUMAN_REVIEW_NODE, AsyncEdgeAction.edge_async(new ReviewEdge()),
+                Map.of(NodeConstants.CREATE_TRANSFER_ORDER_NODE, NodeConstants.CREATE_TRANSFER_ORDER_NODE,
+                        StateGraph.END, StateGraph.END));
 
         stateGraph.addEdge(NodeConstants.CREATE_TRANSFER_ORDER_NODE, StateGraph.END);
 

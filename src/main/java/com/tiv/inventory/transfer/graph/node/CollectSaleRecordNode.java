@@ -1,4 +1,4 @@
-package com.tiv.inventory.transfer.node;
+package com.tiv.inventory.transfer.graph.node;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
