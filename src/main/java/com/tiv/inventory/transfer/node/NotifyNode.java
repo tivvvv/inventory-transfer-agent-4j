@@ -24,13 +24,14 @@ public class NotifyNode implements NodeAction {
 
     @Override
     public Map<String, Object> apply(OverAllState state) throws Exception {
+        String threadId = state.value(Constants.THREAD_ID, "");
         String transferSuggestFormattedData = state.value(Constants.TRANSFER_SUGGEST_FORMATTED_DATA, "");
         JSONObject jsonObject = JSONUtil.parseObj(transferSuggestFormattedData);
         String comment = jsonObject.getStr(Constants.COMMENT);
         Map<String, Object> variables = Map.of(
                 Constants.COMMENT, comment,
-                Constants.APPROVE_LINK, "",
-                Constants.REJECT_LINK, "");
+                Constants.APPROVE_LINK, "http://localhost:8113/review?approval=true&threadId=" + threadId,
+                Constants.REJECT_LINK, "http://localhost:8113/review?approval=false&threadId=" + threadId);
 
         log.info("NotifyNode--apply-receiver: {}, variables: {}", receiver, variables);
         emailService.sendTemplateEmail(receiver, variables);

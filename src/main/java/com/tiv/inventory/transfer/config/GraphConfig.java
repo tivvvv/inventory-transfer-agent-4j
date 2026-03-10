@@ -92,7 +92,8 @@ public class GraphConfig {
                 Constants.INVENTORY_TRANSFER_DATA, new ReplaceStrategy(),
                 Constants.TRANSFER_SUGGEST_RAW_DATA, new ReplaceStrategy(),
                 Constants.TRANSFER_SUGGEST_FORMATTED_DATA, new ReplaceStrategy(),
-                Constants.HUMAN_REVIEW_NEXT_STEP, new ReplaceStrategy());
+                Constants.HUMAN_REVIEW_NEXT_STEP, new ReplaceStrategy(),
+                Constants.THREAD_ID, new ReplaceStrategy());
         return new StateGraph(Constants.INVENTORY_TRANSFER_GRAPH, keyStrategyFactory);
     }
 

@@ -28,4 +28,6 @@ public interface Constants {
 
     String APPROVAL = "approval";
 
+    String THREAD_ID = "threadId";
+
 }
