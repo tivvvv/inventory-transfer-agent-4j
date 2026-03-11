@@ -15,6 +15,7 @@ import com.tiv.inventory.transfer.constant.Constants;
 import com.tiv.inventory.transfer.constant.NodeConstants;
 import com.tiv.inventory.transfer.graph.edge.ReviewEdge;
 import com.tiv.inventory.transfer.graph.node.*;
+import com.tiv.inventory.transfer.graph.saver.TtlRedisSaver;
 import com.tiv.inventory.transfer.service.EmailService;
 import com.tiv.inventory.transfer.service.InventoryService;
 import com.tiv.inventory.transfer.service.SaleRecordService;
@@ -27,6 +28,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 图配置类
@@ -51,6 +53,9 @@ public class GraphConfig {
 
     @Value("${notification.email.receiver}")
     private String receiver;
+
+    @Value("${graph.checkpoint.ttl}")
+    private Long checkpointTtl;
 
     @Bean
     public CompiledGraph graph(ChatClient.Builder chatClientBuilder) throws GraphStateException {
@@ -89,8 +94,9 @@ public class GraphConfig {
         stateGraph.addEdge(NodeConstants.CREATE_TRANSFER_ORDER_NODE, StateGraph.END);
 
         // 持久化配置
+        RedisSaver redisSaver = new TtlRedisSaver(redissonClient, checkpointTtl, TimeUnit.HOURS);
         SaverConfig saverConfig = SaverConfig.builder()
-                .register(SaverEnum.REDIS.getValue(), new RedisSaver(redissonClient))
+                .register(SaverEnum.REDIS.getValue(), redisSaver)
                 .build();
 
         // 编译配置

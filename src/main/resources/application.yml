@@ -54,3 +54,7 @@ logging:
 notification:
   email:
     receiver: ${NOTIFICATION_EMAIL_RECEIVER}
+
+graph:
+  checkpoint:
+    ttl: 24
