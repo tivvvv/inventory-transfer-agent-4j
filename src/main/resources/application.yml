@@ -9,6 +9,13 @@ spring:
     url: jdbc:mysql://localhost:3306/inventory_transfer?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
     username: root
     password: root
+  data:
+    redis:
+      database: 1
+      host: localhost
+      port: 6379
+      timeout: 5s
+      connect-timeout: 5s
   ai:
     ollama:
       base-url: http://localhost:11434

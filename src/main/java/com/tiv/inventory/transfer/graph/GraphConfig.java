@@ -1,4 +1,4 @@
-package com.tiv.inventory.transfer.graph.config;
+package com.tiv.inventory.transfer.graph;
 
 import com.alibaba.cloud.ai.graph.CompileConfig;
 import com.alibaba.cloud.ai.graph.CompiledGraph;
@@ -6,6 +6,9 @@ import com.alibaba.cloud.ai.graph.KeyStrategyFactory;
 import com.alibaba.cloud.ai.graph.StateGraph;
 import com.alibaba.cloud.ai.graph.action.AsyncEdgeAction;
 import com.alibaba.cloud.ai.graph.action.AsyncNodeAction;
+import com.alibaba.cloud.ai.graph.checkpoint.config.SaverConfig;
+import com.alibaba.cloud.ai.graph.checkpoint.constant.SaverEnum;
+import com.alibaba.cloud.ai.graph.checkpoint.savers.RedisSaver;
 import com.alibaba.cloud.ai.graph.exception.GraphStateException;
 import com.alibaba.cloud.ai.graph.state.strategy.ReplaceStrategy;
 import com.tiv.inventory.transfer.constant.Constants;
@@ -17,6 +20,7 @@ import com.tiv.inventory.transfer.service.InventoryService;
 import com.tiv.inventory.transfer.service.SaleRecordService;
 import com.tiv.inventory.transfer.service.TransferOrderService;
 import jakarta.annotation.Resource;
+import org.redisson.api.RedissonClient;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -41,6 +45,9 @@ public class GraphConfig {
 
     @Resource
     private EmailService emailService;
+
+    @Resource
+    private RedissonClient redissonClient;
 
     @Value("${notification.email.receiver}")
     private String receiver;
@@ -81,9 +88,15 @@ public class GraphConfig {
 
         stateGraph.addEdge(NodeConstants.CREATE_TRANSFER_ORDER_NODE, StateGraph.END);
 
+        // 持久化配置
+        SaverConfig saverConfig = SaverConfig.builder()
+                .register(SaverEnum.REDIS.getValue(), new RedisSaver(redissonClient))
+                .build();
+
         // 编译配置
         CompileConfig compileConfig = CompileConfig.builder()
                 .interruptBefore(NodeConstants.HUMAN_REVIEW_NODE)
+                .saverConfig(saverConfig)
                 .build();
         return stateGraph.compile(compileConfig);
     }
