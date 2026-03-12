@@ -1,9 +1,6 @@
 package com.tiv.inventory.transfer.graph;
 
-import com.alibaba.cloud.ai.graph.CompileConfig;
-import com.alibaba.cloud.ai.graph.CompiledGraph;
-import com.alibaba.cloud.ai.graph.KeyStrategyFactory;
-import com.alibaba.cloud.ai.graph.StateGraph;
+import com.alibaba.cloud.ai.graph.*;
 import com.alibaba.cloud.ai.graph.action.AsyncEdgeAction;
 import com.alibaba.cloud.ai.graph.action.AsyncNodeAction;
 import com.alibaba.cloud.ai.graph.checkpoint.config.SaverConfig;
@@ -21,6 +18,7 @@ import com.tiv.inventory.transfer.service.InventoryService;
 import com.tiv.inventory.transfer.service.SaleRecordService;
 import com.tiv.inventory.transfer.service.TransferOrderService;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RedissonClient;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +31,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 图配置类
  */
+@Slf4j
 @Configuration
 public class GraphConfig {
 
@@ -104,7 +103,12 @@ public class GraphConfig {
                 .interruptBefore(NodeConstants.HUMAN_REVIEW_NODE)
                 .saverConfig(saverConfig)
                 .build();
-        return stateGraph.compile(compileConfig);
+
+        CompiledGraph compiledGraph = stateGraph.compile(compileConfig);
+        GraphRepresentation plantUml = compiledGraph.getGraph(GraphRepresentation.Type.PLANTUML, "AI智能库存调拨Agent UML类图", true);
+        log.info("GraphConfig--graph--plantUml: {}", plantUml.content());
+
+        return compiledGraph;
     }
 
     private StateGraph registerStateGraph() {
