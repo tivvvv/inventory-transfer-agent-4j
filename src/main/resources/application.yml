@@ -4,6 +4,16 @@ server:
 spring:
   application:
     name: inventory-transfer-agent-4j
+  config:
+    import:
+      - nacos:inventory-transfer-agent-4j.yml?refreshEnabled=true
+  cloud:
+    nacos:
+      config:
+        server-addr: localhost:18375
+        file-extension: yml
+        namespace: e56dfb90-b97d-48b7-8378-07e42e9b0d3f
+        group: DEFAULT_GROUP
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/inventory_transfer?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
