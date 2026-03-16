@@ -6,6 +6,8 @@ import com.alibaba.cloud.ai.graph.OverAllState;
 import com.alibaba.cloud.ai.graph.RunnableConfig;
 import com.tiv.inventory.transfer.common.BusinessResponse;
 import com.tiv.inventory.transfer.constant.Constants;
+import com.tiv.inventory.transfer.domain.request.ProductSaleRequest;
+import com.tiv.inventory.transfer.service.SaleRecordService;
 import com.tiv.inventory.transfer.util.ResultUtils;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -27,8 +29,12 @@ public class SaleController {
     @Resource
     private CompiledGraph compiledGraph;
 
+    @Resource
+    private SaleRecordService saleRecordService;
+
     @PostMapping("/product")
-    public BusinessResponse<Map<String, Object>> saleProduct(@RequestBody String productId) {
+    public BusinessResponse<Map<String, Object>> saleProduct(@RequestBody ProductSaleRequest productSaleRequest) {
+        saleRecordService.sale(productSaleRequest);
         String threadId = IdUtil.simpleUUID();
         Map<String, Object> inputs = Map.of(
                 Constants.PRODUCT_ID, productId,
