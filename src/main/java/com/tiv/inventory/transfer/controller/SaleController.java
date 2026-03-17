@@ -1,11 +1,6 @@
 package com.tiv.inventory.transfer.controller;
 
-import cn.hutool.core.util.IdUtil;
-import com.alibaba.cloud.ai.graph.CompiledGraph;
-import com.alibaba.cloud.ai.graph.OverAllState;
-import com.alibaba.cloud.ai.graph.RunnableConfig;
 import com.tiv.inventory.transfer.common.BusinessResponse;
-import com.tiv.inventory.transfer.constant.Constants;
 import com.tiv.inventory.transfer.domain.request.ProductSaleRequest;
 import com.tiv.inventory.transfer.service.SaleRecordService;
 import com.tiv.inventory.transfer.util.ResultUtils;
@@ -27,23 +22,12 @@ import java.util.Map;
 public class SaleController {
 
     @Resource
-    private CompiledGraph compiledGraph;
-
-    @Resource
     private SaleRecordService saleRecordService;
 
     @PostMapping("/product")
     public BusinessResponse<Map<String, Object>> saleProduct(@RequestBody ProductSaleRequest productSaleRequest) {
         saleRecordService.sale(productSaleRequest);
-        String threadId = IdUtil.simpleUUID();
-        Map<String, Object> inputs = Map.of(
-                Constants.PRODUCT_ID, productId,
-                Constants.THREAD_ID, threadId);
-        RunnableConfig runnableConfig = RunnableConfig.builder()
-                .threadId(threadId)
-                .build();
-        OverAllState overAllState = compiledGraph.call(inputs, runnableConfig).get();
-        return ResultUtils.success(overAllState.data());
+        return ResultUtils.success();
     }
 
 }
